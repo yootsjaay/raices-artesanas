@@ -26,7 +26,7 @@ class VentaController extends Controller
      */
   public function create() {
     $productos = Productos::where('estado', 1)->where('stock', '>', 0)->get();
-    return view('ventas.create', compact('productos'));
+    return view('admin.ventas.create', compact('productos'));
 }
 
     /**

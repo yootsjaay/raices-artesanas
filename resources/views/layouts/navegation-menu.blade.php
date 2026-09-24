@@ -1,91 +1,116 @@
-<aside class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0 shadow-xl">
-    <div class="py-4 text-gray-500 dark:text-gray-400">
-        <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="{{ route('dashboard') }}">
-            Raíces Artesanas
-        </a>
-        
-        <ul class="mt-6">
-            <li class="relative px-6 py-3">
-                @if(request()->routeIs('dashboard'))
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('dashboard') ? 'text-gray-800 dark:text-gray-100' : '' }}"
-                    href="{{ route('dashboard') }}">
-                    <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                    </svg>
-                    <span class="ml-4">Dashboard</span>
-                </a>
-            </li>
-        </ul>
+{{-- resources/views/layouts/navegation-menu.blade.php --}}
 
-        <hr class="my-4 border-gray-200 dark:border-gray-700">
+{{-- Overlay móvil --}}
+<div x-show="isSideMenuOpen"
+     @click="isSideMenuOpen = false"
+     x-transition:enter="transition ease-in-out duration-150"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in-out duration-150"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-10 bg-black/50 md:hidden">
+</div>
 
-        <ul>
-            {{-- SECCIÓN EXCLUSIVA PARA ADMIN --}}
-            @role('Admin')
-            <li class="relative px-6 py-3">
-                @if(request()->routeIs('admin.categorias.*'))
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('admin.categorias.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
-                    href="{{ route('admin.categorias.index') }}">
-                    <i class="fa-solid fa-tags"></i>
-                    <span class="ml-4">Categorías</span>
-                </a>
-            </li>
-            
-            <li class="relative px-6 py-3">
-                @if(request()->routeIs('admin.presentaciones.*'))
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('admin.presentaciones.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
-                    href="{{ route('admin.presentaciones.index') }}">
-                    <i class="fa-solid fa-box-archive"></i>
-                    <span class="ml-4">Presentaciones</span>
-                </a>
-            </li>
-            @endrole
+{{-- Sidebar --}}
+<aside
+    :class="isSideMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+    class="fixed inset-y-0 left-0 z-20 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700
+           flex flex-col transition-transform duration-300 ease-in-out md:static md:translate-x-0">
 
-            {{-- SECCIÓN COMPARTIDA: ADMIN Y ARTESANOS --}}
-            @hasanyrole('Admin|Artesano')
-            <li class="relative px-6 py-3">
-                @if(request()->routeIs('artesano.productos.*'))
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('artesano.productos.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
-                    href="{{ route('artesano.productos.index') }}">
-                    <i class="fa-solid fa-shirt"></i>
-                    <span class="ml-4">
-                        @role('Admin') Todos los Productos @else Mis Productos @endrole
-                    </span>
-                </a>
-            </li>
-
-            <li class="relative px-6 py-3">
-                @if(request()->routeIs('artesano.ventas.*'))
-                    <span class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg" aria-hidden="true"></span>
-                @endif
-                <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 {{ request()->routeIs('artesano.ventas.*') ? 'text-gray-800 dark:text-gray-100' : '' }}"
-                    href="{{ route('artesano.ventas.index') }}">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="ml-4">
-                        @role('Admin') Ventas Globales @else Mis Ventas @endrole
-                    </span>
-                </a>
-            </li>
-            @endhasanyrole
-        </ul>
-
-        {{-- BOTÓN DE ACCIÓN RÁPIDA --}}
-        @can('publicar.artesania')
-        <div class="px-6 my-6">
-            <a href="{{ route('artesano.productos.create') }}"
-                class="flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                Nuevo Producto
-                <span class="ml-2" aria-hidden="true">+</span>
-            </a>
+    {{-- Logo --}}
+    <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-100 dark:border-gray-700">
+        <div class="w-9 h-9 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <i class="fas fa-hand-sparkles text-white text-sm"></i>
         </div>
-        @endcan
+        <div>
+            <p class="text-sm font-black text-gray-800 dark:text-white leading-tight">Raíces</p>
+            <p class="text-xs text-purple-600 font-bold leading-tight">Artesanas</p>
+        </div>
     </div>
+
+    {{-- Nav --}}
+    <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+
+        <a href="{{ route('dashboard') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                  {{ request()->routeIs('dashboard')
+                     ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25'
+                     : 'text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-purple-600 dark:hover:text-purple-400' }}">
+            <i class="fas fa-home w-4 text-center flex-shrink-0"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <div class="pt-3 pb-1">
+            <p class="px-3 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Catálogo</p>
+        </div>
+
+        <a href="{{ route('administrador.productos.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                  {{ request()->routeIs('administrador.productos.*')
+                     ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25'
+                     : 'text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-purple-600 dark:hover:text-purple-400' }}">
+            <i class="fas fa-box w-4 text-center flex-shrink-0"></i>
+            <span>Productos</span>
+        </a>
+
+        <a href="{{ route('administrador.categorias.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                  {{ request()->routeIs('administrador.categorias.*')
+                     ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25'
+                     : 'text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-purple-600 dark:hover:text-purple-400' }}">
+            <i class="fas fa-folder-open w-4 text-center flex-shrink-0"></i>
+            <span>Categorías</span>
+        </a>
+
+        <a href="{{ route('administrador.presentaciones.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                  {{ request()->routeIs('administrador.presentaciones.*')
+                     ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25'
+                     : 'text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-purple-600 dark:hover:text-purple-400' }}">
+            <i class="fas fa-tags w-4 text-center flex-shrink-0"></i>
+            <span>Presentaciones</span>
+        </a>
+
+        <div class="pt-3 pb-1">
+            <p class="px-3 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Envíos</p>
+        </div>
+
+        <a href="{{ route('administrador.paquetes.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                  {{ request()->routeIs('administrador.paquetes.*')
+                     ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25'
+                     : 'text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-purple-600 dark:hover:text-purple-400' }}">
+            <i class="fas fa-box-open w-4 text-center flex-shrink-0"></i>
+            <span>Paquetes</span>
+        </a>
+
+        @role('administrador')
+        <div class="pt-3 pb-1">
+            <p class="px-3 text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">Configuración</p>
+        </div>
+
+        <a href="{{ route('administrador.roles.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                  {{ request()->routeIs('administrador.roles.*')
+                     ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25'
+                     : 'text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-purple-600 dark:hover:text-purple-400' }}">
+            <i class="fas fa-shield-halved w-4 text-center flex-shrink-0"></i>
+            <span>Roles y Permisos</span>
+        </a>
+        @endrole
+
+    </nav>
+
+    {{-- Footer --}}
+    <div class="px-3 py-4 border-t border-gray-100 dark:border-gray-700">
+        <a href="{{ route('tienda.index') }}" target="_blank"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-500 dark:text-gray-400
+                  hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-purple-600 transition-all duration-200">
+            <i class="fas fa-store w-4 text-center flex-shrink-0"></i>
+            <span>Ver Tienda</span>
+            <i class="fas fa-external-link-alt text-xs ml-auto opacity-50"></i>
+        </a>
+    </div>
+
 </aside>

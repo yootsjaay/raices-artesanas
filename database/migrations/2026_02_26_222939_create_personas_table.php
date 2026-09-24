@@ -18,8 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             
             // Clasificación (Añadí 'Admin' por si quieres guardar datos del admin también)
-            $table->enum('tipo_persona', ['Artesano', 'Cliente', 'Admin'])->default('Cliente');
-
+            $table->enum('tipo_persona', ['administrador', 'artesano', 'cliente']);
             // Datos Personales
             $table->string('nombre', 100);
             $table->string('apellido', 100);

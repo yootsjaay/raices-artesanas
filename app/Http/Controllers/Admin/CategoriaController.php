@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin; 
 use App\Http\Controllers\Controller;
-
 use App\Models\Categoria;
 use App\Models\Caracteristica;
 use Illuminate\Http\Request;
@@ -19,7 +18,7 @@ class CategoriaController extends Controller
     {
         // Cargamos la relación 'caracteristica' que usas en tu @foreach
         $categorias = Categoria::with('caracteristica')->get();
-        return view('categorias.index', compact('categorias'));
+        return view('admin.categorias.index', compact('categorias'));
     }
 
     /**

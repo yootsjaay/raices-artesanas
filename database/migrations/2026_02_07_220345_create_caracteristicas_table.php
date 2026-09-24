@@ -26,6 +26,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Evita errores al hacer rollback si existen FKs externas (ej. tabla marcas)
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('caracteristicas');
+        Schema::enableForeignKeyConstraints();
     }
 };

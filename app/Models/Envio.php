@@ -1,35 +1,48 @@
 <?php
+
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Envio
+ * 
+ * @property int $id
+ * @property int $orden_id
+ * @property string $metodo
+ * @property string|null $tracking_number
+ * @property string|null $url_etiqueta
+ * @property string|null $detalles_entrega
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
+ * @property Ordene $ordene
+ *
+ * @package App\Models
+ */
 class Envio extends Model
 {
-    protected $fillable = [
-        'orden_id',
-        'metodo_envio_id',
-        'transportista_id',
-        'tracking_number', // Aquí guardarás el ID de envia.com
-        'label_url',       // URL del PDF de la guía
-        'costo_envio',
-        'estado_logistico'
-    ];
+	protected $table = 'envios';
 
-    // Relación con la orden de compra
-    public function orden()
-    {
-        return $this->belongsTo(Orden::class);
-    }
+	protected $casts = [
+		'orden_id' => 'int'
+	];
 
-    // Relación con el método (DHL, Taxi, etc.)
-    public function metodo()
-    {
-        return $this->belongsTo(MetodoEnvio::class, 'metodo_envio_id');
-    }
+	protected $fillable = [
+		'orden_id',
+		'metodo',
+		'tracking_number',
+		'url_etiqueta',
+		'detalles_entrega'
+	];
 
-    // Relación opcional: Solo si el envío es por Taxi/Urbano
-    public function transportista()
-    {
-        return $this->belongsTo(Transportista::class);
-    }
+	public function ordene()
+	{
+		return $this->belongsTo(Ordene::class, 'orden_id');
+	}
 }

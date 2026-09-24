@@ -1,61 +1,78 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles; // Importante
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+/**
+ * Class User
+ * 
+ * @property int $id
+ * @property int|null $persona_id
+ * @property string $name
+ * @property string $email
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property string|null $img
+ * @property string|null $remember_token
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
+ * @property Persona|null $persona
+ * @property Collection|Ordene[] $ordenes
+ * @property Collection|Venta[] $ventas
+ *
+ * @package App\Models
+ */
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+	
+use HasApiTokens, Notifiable, HasRoles, HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'estado',
-        'persona_id',
-    ];
+protected $table = 'users';
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	protected $casts = [
+		'persona_id' => 'int',
+		'email_verified_at' => 'datetime'
+	];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
-   // Relación: Un Usuario TIENE UNA Persona
-    public function persona()
-    {
-        return $this->hasOne(Persona::class);
-    }
+	protected $hidden = [
+		'password',
+		'remember_token'
+	];
 
-    // Helper útil: Para saber si es Artesano rápido en Blade o Controladores
-    public function esArtesano()
-    {
-        return $this->persona?->tipo_persona === 'Artesano';
-    }
+	protected $fillable = [
+		'persona_id',
+		'name',
+		'email',
+		'email_verified_at',
+		'password',
+		'img',
+		'remember_token'
+	];
+
+	public function persona()
+	{
+		return $this->hasOne(Persona::class);
+	}
+
+	public function ordenes()
+	{
+		return $this->hasMany(Ordene::class);
+	}
+
+	public function ventas()
+	{
+		return $this->hasMany(Venta::class);
+	}
 }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-use App\Models\Presentaciones;
+use App\Models\Presentacione;
 use App\Models\Caracteristica;
 use App\Http\Requests\StorePresentacionRequest;
 use App\Http\Requests\UpdatePresentacionRequest;
@@ -17,8 +16,8 @@ class PresentacionesController extends Controller
      */
     public function index()
     {
-        $presentaciones= Presentaciones::with('caracteristica')->get();;
-        return view('presentaciones.index', ['presentaciones' => $presentaciones]);
+        $presentaciones= Presentacione::with('caracteristica')->get();;
+        return view('admin.presentaciones.index', ['presentaciones' => $presentaciones]);
     }
 
     /**
@@ -26,7 +25,7 @@ class PresentacionesController extends Controller
      */
     public function create()
     {
-        $presentaciones=Presentaciones::create();
+        $presentaciones=Presentacione::create();
     }
 
     /**
@@ -66,7 +65,7 @@ class PresentacionesController extends Controller
      */
    public function show($id)
 {
-    $presentacion = Presentaciones::with('caracteristica')->find($id);
+    $presentacion = Presentacione::with('caracteristica')->find($id);
 
     if (!$presentacion) {
         return response()->json([
@@ -97,7 +96,7 @@ class PresentacionesController extends Controller
     try {
         DB::beginTransaction();
 
-        $presentacion = Presentaciones::with('caracteristica')->findOrFail($id);
+        $presentacion = Presentacione::with('caracteristica')->findOrFail($id);
 
         if (!$presentacion->caracteristica) {
             return response()->json([

@@ -1,48 +1,59 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * Class Venta
+ * 
+ * @property int $id
+ * @property int $user_id
+ * @property float $total
+ * @property float $monto_artesano
+ * @property float $comision_plataforma
+ * @property float $monto_transporte
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
+ * @property User $user
+ * @property Collection|VentaDetalle[] $venta_detalles
+ *
+ * @package App\Models
+ */
 class Venta extends Model
 {
-    use HasFactory;
+	protected $table = 'ventas';
 
-    protected $fillable = [
-        'user_id',
-        'total',
-        'monto_artesano',
-        'comision_plataforma',
-        'monto_transporte'
-    ];
+	protected $casts = [
+		'user_id' => 'int',
+		'total' => 'float',
+		'monto_artesano' => 'float',
+		'comision_plataforma' => 'float',
+		'monto_transporte' => 'float'
+	];
 
-    /**
-     * Relación: Una venta tiene muchos detalles (productos vendidos)
-     */
-    public function detalles()
-    {
-        return $this->hasMany(VentaDetalle::class, 'venta_id');
-    }
+	protected $fillable = [
+		'user_id',
+		'total',
+		'monto_artesano',
+		'comision_plataforma',
+		'monto_transporte'
+	];
 
-    /**
-     * Relación: Una venta fue registrada por un usuario (vendedor/admin)
-     */
-    public function usuario()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 
-    /**
-     * Boot method para lógica automática (Opcional)
-     * Por ejemplo, podrías generar un folio automático antes de crear la venta.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($venta) {
-            // Lógica para asignar folios o validar montos antes de guardar
-        });
-    }
+	public function venta_detalles()
+	{
+		return $this->hasMany(VentaDetalle::class);
+	}
 }

@@ -29,10 +29,15 @@ return [
     ],
 
     'slack' => [
-        'notifications' => [
-            'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
-        ],
+    'notifications' => [
+        'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
+        'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
     ],
+],
 
-];
+'envia' => [
+    'key' => env('ENVIA_API_KEY'),
+    'env' => env('ENVIA_ENV', 'test'),
+],
+
+];  // ← este es el cierre del array principal
